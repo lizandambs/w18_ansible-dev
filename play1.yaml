@@ -1,0 +1,43 @@
+---
+- hosts: all
+  become: true
+  ignore_errors: true
+  gather_facts: true
+
+  tasks:
+    - name: Create a file
+      file:
+        path: /tmp/playbookfile
+        mode: '0755'
+        state: touch
+      tags:
+        - file
+
+    - name: Check something
+      command: jakdfhdfd
+      ignore_errors: true
+
+    - name: Create a directory
+      file:
+        path: /tmp/dir
+        mode: '0700'
+        state: directory
+
+    - name: Create group
+      group:
+        name: security
+        state: present
+
+    - name: Create user Liza
+      user:
+        comment: Liza Admin
+        shell: /bin/bash
+        group: security
+        name: Liza
+      when: ansible_os_family == "Debian" or ansible_processor_nproc > 2
+
+    - name: Check uptime
+      command: uptime
+
+    - name: Check the date (search for Liza)
+      shell: cat /etc/passwd | grep Liza
